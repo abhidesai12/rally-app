@@ -3,19 +3,26 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const authRoutes = require('./api/auth');
 const tasksRoutes = require('./api/tasks');
+const path = require('path');
 
 const app = express();
 app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-mongoose.connect('mongodb+srv://adesai10:<Goob009>@rallycluster.vci6vet.mongodb.net/?retryWrites=true&w=majority&appName=RallyCluster', { useNewUrlParser: true, useUnifiedTopology: true })
+const mongoUri = 'mongodb+srv://adesai10:Goob009%21@rallycluster.vci6vet.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected'))
-    .catch(err => console.log(err));
+    .catch(err => console.log('MongoDB connection error:', err));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', tasksRoutes);
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+

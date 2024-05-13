@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rally</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Your HTML content goes here -->
+    <!-- Sign Up Page -->
     <div id="signup-page">
         <h1>Rally</h1>
         <form id="signup-form">
@@ -19,6 +19,7 @@
         <p>Already have an account? <a href="#" onclick="showLoginPage()">Log In</a></p>
     </div>
 
+    <!-- Log In Page -->
     <div id="login-page" style="display:none;">
         <h1>Rally</h1>
         <form id="login-form">
@@ -29,6 +30,7 @@
         <p>Don't have an account? <a href="#" onclick="showSignupPage()">Sign Up</a></p>
     </div>
 
+    <!-- My Rally Page -->
     <div id="myrally-page" style="display:none;">
         <h1>My Rally</h1>
         <form id="create-task-form">
@@ -39,18 +41,21 @@
         </form>
         <div id="my-tasks">
             <h2>My Tasks</h2>
+            <!-- Tasks will be displayed here -->
         </div>
         <button onclick="showOurRallyPage()">View Friends' Tasks</button>
     </div>
 
+    <!-- Our Rally Page -->
     <div id="ourrally-page" style="display:none;">
         <h1>Our Rally</h1>
         <div id="friends-tasks">
             <h2>Friends' Tasks</h2>
+            <!-- Friends' tasks will be displayed here -->
         </div>
         <button onclick="showMyRallyPage()">Back to My Rally</button>
     </div>
 
-    <script src="/app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>

@@ -1,30 +1,23 @@
-const express = require('express');
-const router = express.Router();
-const Task = require('../models/Task');
-const User = require('../models/User');
+const mongoose = require('mongoose');
 
-router.post('/', async (req, res) => {
-    const { task, when, where, userEmail } = req.body;
-    try {
-        const user = await User.findOne({ email: userEmail });
-        if (!user) {
-            return res.status(400).send('User not found');
-        }
-        const newTask = new Task({ task, when, where, user: user._id });
-        await newTask.save();
-        res.sendStatus(200);
-    } catch (error) {
-        res.status(400).send(error.message);
+const TaskSchema = new mongoose.Schema({
+    task: {
+        type: String,
+        required: true
+    },
+    when: {
+        type: Date,
+        required: true
+    },
+    where: {
+        type: String,
+        required: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 });
 
-router.get('/', async (req, res) => {
-    try {
-        const tasks = await Task.find().populate('user', 'name');
-        res.json(tasks);
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-});
-
-module.exports = router;
+module.exports = mongoose.model('Task', TaskSchema);

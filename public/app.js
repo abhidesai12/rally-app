@@ -1,3 +1,4 @@
+// Handle Sign Up Form Submission
 document.getElementById('signup-form').addEventListener('submit', function(event) {
     event.preventDefault();
     const formData = {
@@ -15,10 +16,13 @@ document.getElementById('signup-form').addEventListener('submit', function(event
         if (response.ok) {
             localStorage.setItem('userEmail', formData.email);
             showMyRallyPage();
+        } else {
+            alert('Sign up failed. Please try again.');
         }
     });
 });
 
+// Handle Log In Form Submission
 document.getElementById('login-form').addEventListener('submit', function(event) {
     event.preventDefault();
     const formData = {
@@ -35,10 +39,14 @@ document.getElementById('login-form').addEventListener('submit', function(event)
         if (response.ok) {
             localStorage.setItem('userEmail', formData.email);
             showMyRallyPage();
+        } else {
+            alert('Log in failed. Please try again.');
         }
     });
 });
 
+
+// Handle Task Creation Form Submission
 document.getElementById('create-task-form').addEventListener('submit', function(event) {
     event.preventDefault();
     const formData = {
@@ -60,6 +68,7 @@ document.getElementById('create-task-form').addEventListener('submit', function(
     });
 });
 
+// Show Signup Page
 function showSignupPage() {
     document.getElementById('signup-page').style.display = 'block';
     document.getElementById('login-page').style.display = 'none';
@@ -100,6 +109,8 @@ function showOurRallyPage() {
     });
 }
 
+
+// Add Task to My Tasks List
 function addTask(task, when, where) {
     const taskList = document.getElementById('my-tasks');
     const taskItem = document.createElement('div');
