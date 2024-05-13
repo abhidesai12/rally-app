@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const mongoUri = 'mongodb+srv://adesai10:Goob009%21@rallycluster.vci6vet.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://adesai10:Goob009%21@rallycluster.vci6vet.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log('MongoDB connection error:', err));
@@ -25,4 +25,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
