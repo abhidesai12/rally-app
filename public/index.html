@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rally</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <!-- Your HTML content goes here -->
+    <div id="signup-page">
+        <h1>Rally</h1>
+        <form id="signup-form">
+            <input type="text" placeholder="Full Name" required>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="#" onclick="showLoginPage()">Log In</a></p>
+    </div>
+
+    <div id="login-page" style="display:none;">
+        <h1>Rally</h1>
+        <form id="login-form">
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit">Log In</button>
+        </form>
+        <p>Don't have an account? <a href="#" onclick="showSignupPage()">Sign Up</a></p>
+    </div>
+
+    <div id="myrally-page" style="display:none;">
+        <h1>My Rally</h1>
+        <form id="create-task-form">
+            <input type="text" placeholder="Task" required>
+            <input type="datetime-local" placeholder="When" required>
+            <input type="text" placeholder="Where" required>
+            <button type="submit">Create Task</button>
+        </form>
+        <div id="my-tasks">
+            <h2>My Tasks</h2>
+        </div>
+        <button onclick="showOurRallyPage()">View Friends' Tasks</button>
+    </div>
+
+    <div id="ourrally-page" style="display:none;">
+        <h1>Our Rally</h1>
+        <div id="friends-tasks">
+            <h2>Friends' Tasks</h2>
+        </div>
+        <button onclick="showMyRallyPage()">Back to My Rally</button>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>

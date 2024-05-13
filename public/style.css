@@ -1,0 +1,53 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 1em;
+}
+
+button {
+    padding: 10px;
+    font-size: 1em;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+#my-tasks, #friends-tasks {
+    margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+    body {
+        flex-direction: column;
+    }
+
+    form, div {
+        width: 100%;
+        padding: 10px;
+    }
+}
