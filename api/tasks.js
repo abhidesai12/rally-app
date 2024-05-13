@@ -27,4 +27,19 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.post('/rsvp', async (req, res) => {
+    const { taskId, attendeeName } = req.body;
+    try {
+        const task = await Task.findById(taskId);
+        if (!task) {
+            return res.status(400).send('Task not found');
+        }
+        task.attendees.push(attendeeName);
+        await task.save();
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+});
+
 module.exports = router;

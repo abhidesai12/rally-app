@@ -17,7 +17,7 @@ document.getElementById('signup-form').addEventListener('submit', function(event
             localStorage.setItem('userEmail', formData.email);
             showMyRallyPage();
         } else {
-            alert('Sign up failed. Please try again.');
+            response.text().then(text => alert('Sign up failed: ' + text));
         }
     });
 });
@@ -40,11 +40,10 @@ document.getElementById('login-form').addEventListener('submit', function(event)
             localStorage.setItem('userEmail', formData.email);
             showMyRallyPage();
         } else {
-            alert('Log in failed. Please try again.');
+            response.text().then(text => alert('Log in failed: ' + text));
         }
     });
 });
-
 
 // Handle Task Creation Form Submission
 document.getElementById('create-task-form').addEventListener('submit', function(event) {
@@ -64,9 +63,33 @@ document.getElementById('create-task-form').addEventListener('submit', function(
     }).then(response => {
         if (response.ok) {
             addTask(formData.task, formData.when, formData.where);
+        } else {
+            response.text().then(text => alert('Task creation failed: ' + text));
         }
     });
 });
+
+// Handle RSVP Form Submission
+function handleRSVP(event, taskId) {
+    event.preventDefault();
+    const attendeeName = prompt("Enter your name to RSVP:");
+    if (attendeeName) {
+        fetch('/api/tasks/rsvp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ taskId, attendeeName })
+        }).then(response => {
+            if (response.ok) {
+                alert('RSVP successful!');
+                showOurRallyPage();
+            } else {
+                response.text().then(text => alert('RSVP failed: ' + text));
+            }
+        });
+    }
+}
 
 // Show Signup Page
 function showSignupPage() {
@@ -76,6 +99,7 @@ function showSignupPage() {
     document.getElementById('ourrally-page').style.display = 'none';
 }
 
+// Show Login Page
 function showLoginPage() {
     document.getElementById('signup-page').style.display = 'none';
     document.getElementById('login-page').style.display = 'block';
@@ -83,6 +107,7 @@ function showLoginPage() {
     document.getElementById('ourrally-page').style.display = 'none';
 }
 
+// Show My Rally Page
 function showMyRallyPage() {
     document.getElementById('signup-page').style.display = 'none';
     document.getElementById('login-page').style.display = 'none';
@@ -90,6 +115,7 @@ function showMyRallyPage() {
     document.getElementById('ourrally-page').style.display = 'none';
 }
 
+// Show Our Rally Page
 function showOurRallyPage() {
     document.getElementById('signup-page').style.display = 'none';
     document.getElementById('login-page').style.display = 'none';
@@ -97,24 +123,20 @@ function showOurRallyPage() {
     document.getElementById('ourrally-page').style.display = 'block';
 
     fetch('/api/tasks')
-    .then(response => response.json())
-    .then(tasks => {
-        const friendsTasks = document.getElementById('friends-tasks');
-        friendsTasks.innerHTML = '<h2>Friends\' Tasks</h2>';
-        tasks.forEach(task => {
-            const taskItem = document.createElement('div');
-            taskItem.innerHTML = `<strong>${task.task}</strong> - ${task.when} at ${task.where}`;
-            friendsTasks.appendChild(taskItem);
+        .then(response => response.json())
+        .then(tasks => {
+            const friendsTasks = document.getElementById('friends-tasks');
+            friendsTasks.innerHTML = '<h2>Friends\' Tasks</h2>';
+            tasks.forEach(task => {
+                const taskItem = document.createElement('div');
+                taskItem.innerHTML = `
+                    <strong>${task.task}</strong> - ${task.when} at ${task.where}
+                    <br />
+                    Attended by: ${task.attendees.join(', ')}
+                    <br />
+                    <button onclick="handleRSVP(event, '${task._id}')">RSVP</button>
+                `;
+                friendsTasks.appendChild(taskItem);
+            });
         });
-    });
-}
-
-
-// Add Task to My Tasks List
-function addTask(task, when, where) {
-    const taskList = document.getElementById('my-tasks');
-    const taskItem = document.createElement('div');
-    taskItem.innerHTML = `<strong>${task}</strong> - ${when} at ${where}`;
-    taskList.appendChild(taskItem);
-    document.getElementById('create-task-form').reset();
 }
