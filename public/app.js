@@ -1,3 +1,9 @@
+// Utility function to format date
+function formatDate(dateString) {
+    const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+}
+
 // Handle Sign Up Form Submission
 document.getElementById('signup-form').addEventListener('submit', function(event) {
     event.preventDefault();
@@ -62,7 +68,7 @@ document.getElementById('create-task-form').addEventListener('submit', function(
         body: JSON.stringify(formData)
     }).then(response => {
         if (response.ok) {
-            addTask(formData.task, formData.when, formData.where);
+            showMyRallyPage();
         } else {
             response.text().then(text => alert('Task creation failed: ' + text));
         }
@@ -72,20 +78,35 @@ document.getElementById('create-task-form').addEventListener('submit', function(
 // Handle RSVP Form Submission
 function handleRSVP(event, taskId) {
     event.preventDefault();
-    const attendeeName = prompt("Enter your name to RSVP:");
-    if (attendeeName) {
-        fetch('/api/tasks/rsvp', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ taskId, attendeeName })
+    const attendeeName = localStorage.getItem('userEmail');
+    fetch('/api/tasks/rsvp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ taskId, attendeeName })
+    }).then(response => {
+        if (response.ok) {
+            alert('RSVP successful!');
+            showOurRallyPage();
+        } else {
+            response.text().then(text => alert('RSVP failed: ' + text));
+        }
+    });
+}
+
+// Handle Task Deletion
+function handleDeleteTask(event, taskId) {
+    event.preventDefault();
+    if (confirm("Are you sure you want to delete this task?")) {
+        fetch(`/api/tasks/${taskId}`, {
+            method: 'DELETE'
         }).then(response => {
             if (response.ok) {
-                alert('RSVP successful!');
-                showOurRallyPage();
+                alert('Task deleted successfully!');
+                showMyRallyPage();
             } else {
-                response.text().then(text => alert('RSVP failed: ' + text));
+                response.text().then(text => alert('Task deletion failed: ' + text));
             }
         });
     }
@@ -113,6 +134,24 @@ function showMyRallyPage() {
     document.getElementById('login-page').style.display = 'none';
     document.getElementById('myrally-page').style.display = 'block';
     document.getElementById('ourrally-page').style.display = 'none';
+
+    const userEmail = localStorage.getItem('userEmail');
+
+    fetch('/api/tasks')
+        .then(response => response.json())
+        .then(tasks => {
+            const myTasks = document.getElementById('my-tasks');
+            myTasks.innerHTML = '<h2>My Tasks</h2>';
+            tasks.filter(task => task.user.email === userEmail).forEach(task => {
+                const taskItem = document.createElement('div');
+                taskItem.innerHTML = `
+                    <strong>${task.task}</strong> - ${formatDate(task.when)} at ${task.where}
+                    <br />
+                    <button onclick="handleDeleteTask(event, '${task._id}')">Delete</button>
+                `;
+                myTasks.appendChild(taskItem);
+            });
+        });
 }
 
 // Show Our Rally Page
@@ -122,6 +161,8 @@ function showOurRallyPage() {
     document.getElementById('myrally-page').style.display = 'none';
     document.getElementById('ourrally-page').style.display = 'block';
 
+    const userEmail = localStorage.getItem('userEmail');
+
     fetch('/api/tasks')
         .then(response => response.json())
         .then(tasks => {
@@ -129,12 +170,13 @@ function showOurRallyPage() {
             friendsTasks.innerHTML = '<h2>Friends\' Tasks</h2>';
             tasks.forEach(task => {
                 const taskItem = document.createElement('div');
+                const hasRSVPed = task.attendees.includes(userEmail);
                 taskItem.innerHTML = `
-                    <strong>${task.task}</strong> - ${task.when} at ${task.where}
+                    <strong>${task.task}</strong> - ${formatDate(task.when)} at ${task.where}
                     <br />
                     Attended by: ${task.attendees.join(', ')}
                     <br />
-                    <button onclick="handleRSVP(event, '${task._id}')">RSVP</button>
+                    ${!hasRSVPed ? `<button onclick="handleRSVP(event, '${task._id}')">RSVP</button>` : ''}
                 `;
                 friendsTasks.appendChild(taskItem);
             });

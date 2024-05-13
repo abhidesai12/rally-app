@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const tasks = await Task.find().populate('user', 'name');
+        const tasks = await Task.find().populate('user', 'name').sort({ when: 1 });
         res.json(tasks);
     } catch (error) {
         res.status(400).send(error.message);
@@ -34,8 +34,24 @@ router.post('/rsvp', async (req, res) => {
         if (!task) {
             return res.status(400).send('Task not found');
         }
+        if (task.attendees.includes(attendeeName)) {
+            return res.status(400).send('You have already RSVP\'d to this task');
+        }
         task.attendees.push(attendeeName);
         await task.save();
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+});
+
+router.delete('/:taskId', async (req, res) => {
+    const { taskId } = req.params;
+    try {
+        const task = await Task.findByIdAndDelete(taskId);
+        if (!task) {
+            return res.status(404).send('Task not found');
+        }
         res.sendStatus(200);
     } catch (error) {
         res.status(400).send(error.message);
