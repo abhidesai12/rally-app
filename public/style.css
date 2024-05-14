@@ -6,14 +6,14 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0; /* Change this to your preferred background color */
+    background-color: #ffffff; /* Change this to your preferred background color */
 }
 
 h1 {
     font-size: 2em;
     font-style: italic;
     text-transform: lowercase;
-    color: #333; /* Change this to your preferred text color */
+    color: #000000; /* Change this to your preferred text color */
 }
 
 form {
@@ -39,7 +39,7 @@ button {
 }
 
 button:hover {
-    background-color: #555; /* Change this to your preferred hover color */
+    background-color: #d45c24; /* Change this to your preferred hover color */
 }
 
 #my-tasks, #friends-tasks {
