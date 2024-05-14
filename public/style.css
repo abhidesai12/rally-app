@@ -32,14 +32,14 @@ button:hover {
     background-color: darkgray;
 }
 
-.red-button {
+.black-button {
     background-color: black;
     color: white;
     border: none;
     cursor: pointer;
 }
 
-.red-button:hover {
+.black-button:hover {
     background-color: darkgray;
 }
 
