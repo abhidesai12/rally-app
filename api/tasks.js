@@ -58,4 +58,17 @@ router.delete('/:taskId', async (req, res) => {
     }
 });
 
+router.delete('/:taskId', async (req, res) => {
+    const { taskId } = req.params;
+    try {
+        const task = await Task.findByIdAndDelete(taskId);
+        if (!task) {
+            return res.status(404).send('Task not found');
+        }
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+});
+
 module.exports = router;

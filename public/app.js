@@ -142,7 +142,7 @@ function showMyRallyPage() {
         .then(tasks => {
             const myTasks = document.getElementById('my-tasks');
             myTasks.innerHTML = '<h2>My Tasks</h2>';
-            tasks.filter(task => task.user.email === userEmail).forEach(task => {
+            tasks.filter(task => task.user.email === userEmail || task.attendees.includes(userEmail)).forEach(task => {
                 const taskItem = document.createElement('div');
                 taskItem.innerHTML = `
                     <strong>${task.task}</strong> - ${formatDate(task.when)} at ${task.where}
