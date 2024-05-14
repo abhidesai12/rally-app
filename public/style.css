@@ -1,39 +1,46 @@
 body {
     background-color: white;
     font-family: Arial, sans-serif;
+    text-align: center;
 }
 
 h1, h2 {
     color: black;
 }
 
+form, #my-moments, #friends-today, #friends-future {
+    display: inline-block;
+    text-align: left;
+    margin: 0 auto;
+}
+
 input, button {
     display: block;
-    margin: 10px 0;
+    margin: 10px auto;
     padding: 10px;
     font-size: 1em;
 }
 
 button {
-    background-color: red;
+    background-color: black;
     color: white;
     border: none;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: darkred;
+    background-color: darkgray;
 }
 
 .red-button {
-    background-color: red;
+    background-color: black;
     color: white;
     border: none;
     cursor: pointer;
 }
 
 .red-button:hover {
-    background-color: darkred;
+    background-color: darkgray;
 }
 
 div {
