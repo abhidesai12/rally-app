@@ -112,6 +112,25 @@ function handleDeleteMoment(event, taskId) {
     }
 }
 
+// Handle Send Invites
+function handleSendInvites(event, taskId) {
+    event.preventDefault();
+    const userEmail = localStorage.getItem('userEmail');
+    fetch('/api/tasks/send-invites', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ taskId, userEmail })
+    }).then(response => {
+        if (response.ok) {
+            alert('Invitations sent!');
+        } else {
+            response.text().then(text => alert('Failed to send invites: ' + text));
+        }
+    });
+}
+
 // Show Signup Page
 function showSignupPage() {
     document.getElementById('signup-page').style.display = 'block';
@@ -148,6 +167,7 @@ function showMyMomentsPage() {
                     <strong>${task.task}</strong> - ${formatDate(task.when)} at ${task.where}
                     <br />
                     <button class="red-button" onclick="handleDeleteMoment(event, '${task._id}')">Delete</button>
+                    <button class="red-button" onclick="handleSendInvites(event, '${task._id}')">Send Invites</button>
                 `;
                 myMoments.appendChild(momentItem);
             });
