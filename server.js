@@ -48,7 +48,13 @@ app.post('/api/tasks/send-invites', (req, res) => {
 
         // Create ICS file
         const event = {
-            start: [task.when.getFullYear(), task.when.getMonth() + 1, task.when.getDate(), task.when.getHours(), task.when.getMinutes()],
+            start: [
+                task.when.getFullYear(),
+                task.when.getMonth() + 1,
+                task.when.getDate(),
+                task.when.getHours(),
+                task.when.getMinutes()
+            ],
             duration: { hours: 1, minutes: 0 },
             title: task.task,
             description: `You are invited to ${task.task}. Hosted by ${task.user.email}.`,
@@ -71,8 +77,7 @@ app.post('/api/tasks/send-invites', (req, res) => {
                 subject: `Invitation to ${task.task}`,
                 text: `You are invited to ${task.task} on ${task.when} at ${task.where}. Hosted by ${task.user.email}.`,
                 icalEvent: {
-                    filename: 'invite.ics',
-                    method: 'request',
+                    method: 'REQUEST',
                     content: value
                 }
             };
