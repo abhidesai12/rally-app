@@ -3,6 +3,7 @@ const router = express.Router();
 const Task = require('../models/Task');
 const User = require('../models/User');
 
+// Create task endpoint
 router.post('/', async (req, res) => {
     const { task, when, where, userEmail } = req.body;
     try {
@@ -18,15 +19,17 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Get tasks endpoint
 router.get('/', async (req, res) => {
     try {
-        const tasks = await Task.find().populate('user', 'name').sort({ when: 1 });
+        const tasks = await Task.find().populate('user', 'name email').sort({ when: 1 });
         res.json(tasks);
     } catch (error) {
         res.status(400).send(error.message);
     }
 });
 
+// RSVP endpoint
 router.post('/rsvp', async (req, res) => {
     const { taskId, attendeeName } = req.body;
     try {
@@ -45,19 +48,7 @@ router.post('/rsvp', async (req, res) => {
     }
 });
 
-router.delete('/:taskId', async (req, res) => {
-    const { taskId } = req.params;
-    try {
-        const task = await Task.findByIdAndDelete(taskId);
-        if (!task) {
-            return res.status(404).send('Task not found');
-        }
-        res.sendStatus(200);
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-});
-
+// Delete task endpoint
 router.delete('/:taskId', async (req, res) => {
     const { taskId } = req.params;
     try {

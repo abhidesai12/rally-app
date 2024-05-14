@@ -88,7 +88,7 @@ function handleRSVP(event, taskId) {
     }).then(response => {
         if (response.ok) {
             alert('RSVP successful!');
-            showOurRallyPage();
+            showMyRallyPage();
         } else {
             response.text().then(text => alert('RSVP failed: ' + text));
         }
@@ -142,12 +142,19 @@ function showMyRallyPage() {
         .then(tasks => {
             const myTasks = document.getElementById('my-tasks');
             myTasks.innerHTML = '<h2>My Tasks</h2>';
-            tasks.filter(task => task.user.email === userEmail || task.attendees.includes(userEmail)).forEach(task => {
+            tasks.filter(task => task.user.email === userEmail).forEach(task => {
                 const taskItem = document.createElement('div');
                 taskItem.innerHTML = `
                     <strong>${task.task}</strong> - ${formatDate(task.when)} at ${task.where}
                     <br />
                     <button onclick="handleDeleteTask(event, '${task._id}')">Delete</button>
+                `;
+                myTasks.appendChild(taskItem);
+            });
+            tasks.filter(task => task.attendees.includes(userEmail)).forEach(task => {
+                const taskItem = document.createElement('div');
+                taskItem.innerHTML = `
+                    <strong>${task.task}</strong> - ${formatDate(task.when)} at ${task.where}
                 `;
                 myTasks.appendChild(taskItem);
             });
@@ -161,8 +168,6 @@ function showOurRallyPage() {
     document.getElementById('myrally-page').style.display = 'none';
     document.getElementById('ourrally-page').style.display = 'block';
 
-    const userEmail = localStorage.getItem('userEmail');
-
     fetch('/api/tasks')
         .then(response => response.json())
         .then(tasks => {
@@ -170,9 +175,11 @@ function showOurRallyPage() {
             friendsTasks.innerHTML = '<h2>Friends\' Tasks</h2>';
             tasks.forEach(task => {
                 const taskItem = document.createElement('div');
-                const hasRSVPed = task.attendees.includes(userEmail);
+                const hasRSVPed = task.attendees.includes(localStorage.getItem('userEmail'));
                 taskItem.innerHTML = `
                     <strong>${task.task}</strong> - ${formatDate(task.when)} at ${task.where}
+                    <br />
+                    Hosted by: ${task.user.email}
                     <br />
                     Attended by: ${task.attendees.join(', ')}
                     <br />
@@ -181,4 +188,11 @@ function showOurRallyPage() {
                 friendsTasks.appendChild(taskItem);
             });
         });
+}
+
+// Initial page load
+if (localStorage.getItem('userEmail')) {
+    showMyRallyPage();
+} else {
+    showSignupPage();
 }
