@@ -21,7 +21,7 @@ document.getElementById('signup-form').addEventListener('submit', function(event
     }).then(response => {
         if (response.ok) {
             localStorage.setItem('userEmail', formData.email);
-            showMyRallyPage();
+            showMyMomentsPage();
         } else {
             response.text().then(text => alert('Sign up failed: ' + text));
         }
@@ -44,15 +44,15 @@ document.getElementById('login-form').addEventListener('submit', function(event)
     }).then(response => {
         if (response.ok) {
             localStorage.setItem('userEmail', formData.email);
-            showMyRallyPage();
+            showMyMomentsPage();
         } else {
             response.text().then(text => alert('Log in failed: ' + text));
         }
     });
 });
 
-// Handle Task Creation Form Submission
-document.getElementById('create-task-form').addEventListener('submit', function(event) {
+// Handle Moment Creation Form Submission
+document.getElementById('create-moment-form').addEventListener('submit', function(event) {
     event.preventDefault();
     const formData = {
         task: event.target[0].value,
@@ -68,9 +68,9 @@ document.getElementById('create-task-form').addEventListener('submit', function(
         body: JSON.stringify(formData)
     }).then(response => {
         if (response.ok) {
-            showMyRallyPage();
+            showMyMomentsPage();
         } else {
-            response.text().then(text => alert('Task creation failed: ' + text));
+            response.text().then(text => alert('Moment creation failed: ' + text));
         }
     });
 });
@@ -88,25 +88,25 @@ function handleRSVP(event, taskId) {
     }).then(response => {
         if (response.ok) {
             alert('RSVP successful!');
-            showMyRallyPage();
+            showMyMomentsPage();
         } else {
             response.text().then(text => alert('RSVP failed: ' + text));
         }
     });
 }
 
-// Handle Task Deletion
-function handleDeleteTask(event, taskId) {
+// Handle Moment Deletion
+function handleDeleteMoment(event, taskId) {
     event.preventDefault();
-    if (confirm("Are you sure you want to delete this task?")) {
+    if (confirm("Are you sure you want to delete this moment?")) {
         fetch(`/api/tasks/${taskId}`, {
             method: 'DELETE'
         }).then(response => {
             if (response.ok) {
-                alert('Task deleted successfully!');
-                showMyRallyPage();
+                alert('Moment deleted successfully!');
+                showMyMomentsPage();
             } else {
-                response.text().then(text => alert('Task deletion failed: ' + text));
+                response.text().then(text => alert('Moment deletion failed: ' + text));
             }
         });
     }
@@ -116,83 +116,117 @@ function handleDeleteTask(event, taskId) {
 function showSignupPage() {
     document.getElementById('signup-page').style.display = 'block';
     document.getElementById('login-page').style.display = 'none';
-    document.getElementById('myrally-page').style.display = 'none';
-    document.getElementById('ourrally-page').style.display = 'none';
+    document.getElementById('mymoments-page').style.display = 'none';
+    document.getElementById('ourmoments-page').style.display = 'none';
 }
 
 // Show Login Page
 function showLoginPage() {
     document.getElementById('signup-page').style.display = 'none';
     document.getElementById('login-page').style.display = 'block';
-    document.getElementById('myrally-page').style.display = 'none';
-    document.getElementById('ourrally-page').style.display = 'none';
+    document.getElementById('mymoments-page').style.display = 'none';
+    document.getElementById('ourmoments-page').style.display = 'none';
 }
 
-// Show My Rally Page
-function showMyRallyPage() {
+// Show My Moments Page
+function showMyMomentsPage() {
     document.getElementById('signup-page').style.display = 'none';
     document.getElementById('login-page').style.display = 'none';
-    document.getElementById('myrally-page').style.display = 'block';
-    document.getElementById('ourrally-page').style.display = 'none';
+    document.getElementById('mymoments-page').style.display = 'block';
+    document.getElementById('ourmoments-page').style.display = 'none';
 
     const userEmail = localStorage.getItem('userEmail');
 
     fetch('/api/tasks')
         .then(response => response.json())
         .then(tasks => {
-            const myTasks = document.getElementById('my-tasks');
-            myTasks.innerHTML = '<h2>My Tasks</h2>';
+            const myMoments = document.getElementById('my-moments');
+            myMoments.innerHTML = '<h2>My Moments</h2>';
             tasks.filter(task => task.user.email === userEmail).forEach(task => {
-                const taskItem = document.createElement('div');
-                taskItem.innerHTML = `
+                const momentItem = document.createElement('div');
+                momentItem.innerHTML = `
                     <strong>${task.task}</strong> - ${formatDate(task.when)} at ${task.where}
                     <br />
-                    <button onclick="handleDeleteTask(event, '${task._id}')">Delete</button>
+                    <button class="red-button" onclick="handleDeleteMoment(event, '${task._id}')">Delete</button>
                 `;
-                myTasks.appendChild(taskItem);
+                myMoments.appendChild(momentItem);
             });
             tasks.filter(task => task.attendees.includes(userEmail)).forEach(task => {
-                const taskItem = document.createElement('div');
-                taskItem.innerHTML = `
+                const momentItem = document.createElement('div');
+                momentItem.innerHTML = `
                     <strong>${task.task}</strong> - ${formatDate(task.when)} at ${task.where}
                 `;
-                myTasks.appendChild(taskItem);
+                myMoments.appendChild(momentItem);
             });
         });
 }
 
-// Show Our Rally Page
-function showOurRallyPage() {
+// Show Our Moments Page
+function showOurMomentsPage() {
     document.getElementById('signup-page').style.display = 'none';
     document.getElementById('login-page').style.display = 'none';
-    document.getElementById('myrally-page').style.display = 'none';
-    document.getElementById('ourrally-page').style.display = 'block';
+    document.getElementById('mymoments-page').style.display = 'none';
+    document.getElementById('ourmoments-page').style.display = 'block';
 
     fetch('/api/tasks')
         .then(response => response.json())
         .then(tasks => {
-            const friendsTasks = document.getElementById('friends-tasks');
-            friendsTasks.innerHTML = '<h2>Friends\' Tasks</h2>';
-            tasks.forEach(task => {
-                const taskItem = document.createElement('div');
-                const hasRSVPed = task.attendees.includes(localStorage.getItem('userEmail'));
-                taskItem.innerHTML = `
+            const friendsToday = document.getElementById('friends-today');
+            const friendsFuture = document.getElementById('friends-future');
+            const now = new Date();
+
+            friendsToday.innerHTML = '<h2>Today\'s Moments</h2>';
+            friendsFuture.innerHTML = '<h2>Future Moments</h2>';
+
+            tasks.filter(task => new Date(task.when).toDateString() === now.toDateString()).forEach(task => {
+                const momentItem = document.createElement('div');
+                momentItem.innerHTML = `
                     <strong>${task.task}</strong> - ${formatDate(task.when)} at ${task.where}
                     <br />
                     Hosted by: ${task.user.email}
                     <br />
                     Attended by: ${task.attendees.join(', ')}
                     <br />
-                    ${!hasRSVPed ? `<button onclick="handleRSVP(event, '${task._id}')">RSVP</button>` : ''}
+                    ${!task.attendees.includes(localStorage.getItem('userEmail')) ? `<button class="red-button" onclick="handleRSVP(event, '${task._id}')">RSVP</button>` : ''}
                 `;
-                friendsTasks.appendChild(taskItem);
+                friendsToday.appendChild(momentItem);
+            });
+
+            tasks.filter(task => new Date(task.when) > now).forEach(task => {
+                const momentItem = document.createElement('div');
+                momentItem.innerHTML = `
+                    <strong>${task.task}</strong> - ${formatDate(task.when)} at ${task.where}
+                    <br />
+                    Hosted by: ${task.user.email}
+                    <br />
+                    Attended by: ${task.attendees.join(', ')}
+                    <br />
+                    ${!task.attendees.includes(localStorage.getItem('userEmail')) ? `<button class="red-button" onclick="handleRSVP(event, '${task._id}')">RSVP</button>` : ''}
+                `;
+                friendsFuture.appendChild(momentItem);
             });
         });
 }
 
+// Delete overdue moments
+function deleteOverdueMoments() {
+    fetch('/api/tasks/overdue', {
+        method: 'DELETE'
+    }).then(response => {
+        if (response.ok) {
+            console.log('Overdue moments deleted');
+        } else {
+            response.text().then(text => alert('Failed to delete overdue moments: ' + text));
+        }
+    });
+}
+
+// Call this function on initial load
+deleteOverdueMoments();
+
 // Initial page load
 if (localStorage.getItem('userEmail')) {
-    showMyRallyPage();
+    showMyMomentsPage();
 } else {
     showSignupPage();
 }

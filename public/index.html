@@ -30,30 +30,34 @@
         <p>Don't have an account? <a href="#" onclick="showSignupPage()">Sign Up</a></p>
     </div>
 
-    <!-- My Rally Page -->
-    <div id="myrally-page" style="display:none;">
+    <!-- My Moments Page -->
+    <div id="mymoments-page" style="display:none;">
         <h1>rally</h1>
-        <form id="create-task-form">
-            <input type="text" placeholder="Task" required>
+        <form id="create-moment-form">
+            <input type="text" placeholder="Moment" required>
             <input type="datetime-local" placeholder="When" required>
             <input type="text" placeholder="Where" required>
-            <button type="submit">Create Task</button>
+            <button type="submit">Create Moment</button>
         </form>
-        <div id="my-tasks">
-            <h2>My Tasks</h2>
-            <!-- Tasks will be displayed here -->
+        <div id="my-moments">
+            <h2>My Moments</h2>
+            <!-- Moments will be displayed here -->
         </div>
-        <button onclick="showOurRallyPage()">View Friends' Tasks</button>
+        <button class="red-button" onclick="showOurMomentsPage()">View Friends' Moments</button>
     </div>
 
-    <!-- Our Rally Page -->
-    <div id="ourrally-page" style="display:none;">
+    <!-- Our Moments Page -->
+    <div id="ourmoments-page" style="display:none;">
         <h1>rally</h1>
-        <div id="friends-tasks">
-            <h2>Friends' Tasks</h2>
-            <!-- Friends' tasks will be displayed here -->
+        <div id="friends-today">
+            <h2>Today's Moments</h2>
+            <!-- Today's moments will be displayed here -->
         </div>
-        <button onclick="showMyRallyPage()">Back to My Rally</button>
+        <div id="friends-future">
+            <h2>Future Moments</h2>
+            <!-- Future moments will be displayed here -->
+        </div>
+        <button class="red-button" onclick="showMyMomentsPage()">Back to My Moments</button>
     </div>
 
     <script src="app.js"></script>
