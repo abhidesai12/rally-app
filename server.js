@@ -1,8 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const authRoutes = require('./api/auth');
-const tasksRoutes = require('./api/tasks');
+const tasksRoutes = require('./api/moments'); // Adjust the path as necessary
 const path = require('path');
 
 const app = express();

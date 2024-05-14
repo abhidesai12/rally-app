@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Moment = require('../models/Task'); // Using Task for backend
+const Task = require('../models/Task'); // Adjust the path as necessary
 const User = require('../models/User');
 const nodemailer = require('nodemailer');
 
@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Create moment endpoint
+// Create task endpoint
 router.post('/', async (req, res) => {
     const { task, when, where, userEmail } = req.body;
     try {
@@ -21,19 +21,19 @@ router.post('/', async (req, res) => {
         if (!user) {
             return res.status(400).send('User not found');
         }
-        const newMoment = new Moment({ task, when, where, user: user._id });
-        await newMoment.save();
+        const newTask = new Task({ task, when, where, user: user._id });
+        await newTask.save();
         res.sendStatus(200);
     } catch (error) {
         res.status(400).send(error.message);
     }
 });
 
-// Get moments endpoint
+// Get tasks endpoint
 router.get('/', async (req, res) => {
     try {
-        const moments = await Moment.find().populate('user', 'name email').sort({ when: 1 });
-        res.json(moments);
+        const tasks = await Task.find().populate('user', 'name email').sort({ when: 1 });
+        res.json(tasks);
     } catch (error) {
         res.status(400).send(error.message);
     }
@@ -43,28 +43,28 @@ router.get('/', async (req, res) => {
 router.post('/rsvp', async (req, res) => {
     const { taskId, attendeeName } = req.body;
     try {
-        const moment = await Moment.findById(taskId);
-        if (!moment) {
-            return res.status(400).send('Moment not found');
+        const task = await Task.findById(taskId);
+        if (!task) {
+            return res.status(400).send('Task not found');
         }
-        if (moment.attendees.includes(attendeeName)) {
-            return res.status(400).send('You have already RSVP\'d to this moment');
+        if (task.attendees.includes(attendeeName)) {
+            return res.status(400).send('You have already RSVP\'d to this task');
         }
-        moment.attendees.push(attendeeName);
-        await moment.save();
+        task.attendees.push(attendeeName);
+        await task.save();
         res.sendStatus(200);
     } catch (error) {
         res.status(400).send(error.message);
     }
 });
 
-// Delete moment endpoint
+// Delete task endpoint
 router.delete('/:taskId', async (req, res) => {
     const { taskId } = req.params;
     try {
-        const moment = await Moment.findByIdAndDelete(taskId);
-        if (!moment) {
-            return res.status(404).send('Moment not found');
+        const task = await Task.findByIdAndDelete(taskId);
+        if (!task) {
+            return res.status(404).send('Task not found');
         }
         res.sendStatus(200);
     } catch (error) {
@@ -72,11 +72,11 @@ router.delete('/:taskId', async (req, res) => {
     }
 });
 
-// Delete overdue moments endpoint
+// Delete overdue tasks endpoint
 router.delete('/overdue', async (req, res) => {
     try {
         const now = new Date();
-        const result = await Moment.deleteMany({ when: { $lt: now } });
+        const result = await Task.deleteMany({ when: { $lt: now } });
         res.json({ deletedCount: result.deletedCount });
     } catch (error) {
         res.status(400).send(error.message);
@@ -87,19 +87,19 @@ router.delete('/overdue', async (req, res) => {
 router.post('/send-invites', async (req, res) => {
     const { taskId, userEmail } = req.body;
     try {
-        const moment = await Moment.findById(taskId).populate('user', 'email');
-        if (!moment) {
-            return res.status(400).send('Moment not found');
+        const task = await Task.findById(taskId).populate('user', 'email');
+        if (!task) {
+            return res.status(400).send('Task not found');
         }
-        if (moment.user.email !== userEmail) {
-            return res.status(403).send('You are not the host of this moment');
+        if (task.user.email !== userEmail) {
+            return res.status(403).send('You are not the host of this task');
         }
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
-            to: moment.attendees.join(', '),
-            subject: `Invitation to ${moment.task}`,
-            text: `You are invited to ${moment.task} at ${moment.where} on ${formatDate(moment.when)}`
+            to: task.attendees.join(', '),
+            subject: `Invitation to ${task.task}`,
+            text: `You are invited to ${task.task} at ${task.where} on ${formatDate(task.when)}`
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
