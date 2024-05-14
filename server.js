@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
+const ics = require('ics');
 const authRoutes = require('./api/auth');
 const tasksRoutes = require('./api/tasks');
 const path = require('path');
@@ -45,18 +46,43 @@ app.post('/api/tasks/send-invites', (req, res) => {
             return res.status(400).send('Task not found');
         }
 
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: task.attendees.join(', '),
-            subject: `Invitation to ${task.task}`,
-            text: `You are invited to ${task.task} on ${task.when} at ${task.where}. Hosted by ${task.user.email}.`,
+        // Create ICS file
+        const event = {
+            start: [task.when.getFullYear(), task.when.getMonth() + 1, task.when.getDate(), task.when.getHours(), task.when.getMinutes()],
+            duration: { hours: 1, minutes: 0 },
+            title: task.task,
+            description: `You are invited to ${task.task}. Hosted by ${task.user.email}.`,
+            location: task.where,
+            url: 'http://yourapp.com',
+            status: 'CONFIRMED',
+            busyStatus: 'BUSY',
+            organizer: { name: 'Your App', email: process.env.EMAIL_USER },
+            attendees: task.attendees.map(email => ({ email }))
         };
 
-        transporter.sendMail(mailOptions, (error, info) => {
+        ics.createEvent(event, (error, value) => {
             if (error) {
-                return res.status(500).send('Failed to send invites: ' + error.message);
+                return res.status(500).send('Failed to create calendar invite: ' + error.message);
             }
-            res.send('Invitations sent!');
+
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: task.attendees.join(', '),
+                subject: `Invitation to ${task.task}`,
+                text: `You are invited to ${task.task} on ${task.when} at ${task.where}. Hosted by ${task.user.email}.`,
+                icalEvent: {
+                    filename: 'invite.ics',
+                    method: 'request',
+                    content: value
+                }
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return res.status(500).send('Failed to send invites: ' + error.message);
+                }
+                res.send('Invitations sent!');
+            });
         });
     });
 });
