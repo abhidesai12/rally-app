@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const authRoutes = require('./api/auth');
-const tasksRoutes = require('./api/moments'); // Adjust the path as necessary
+const tasksRoutes = require('./api/tasks');
 const path = require('path');
 
 const app = express();
