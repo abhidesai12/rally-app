@@ -1,17 +1,7 @@
 body {
     background-color: white;
     font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
-
-.container {
     text-align: center;
-    width: 100%;
-    max-width: 500px;
 }
 
 h1, h2 {
@@ -19,20 +9,16 @@ h1, h2 {
 }
 
 form, #my-moments, #friends-today, #friends-future {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: inline-block;
     text-align: left;
     margin: 0 auto;
 }
 
 input, button {
     display: block;
-    margin: 10px 0;
+    margin: 10px auto;
     padding: 10px;
     font-size: 1em;
-    width: 100%;
-    box-sizing: border-box;
 }
 
 button {
@@ -46,18 +32,17 @@ button:hover {
     background-color: darkgray;
 }
 
-.black-button {
+.red-button {
     background-color: black;
     color: white;
     border: none;
     cursor: pointer;
 }
 
-.black-button:hover {
+.red-button:hover {
     background-color: darkgray;
 }
 
 div {
     margin: 10px 0;
-    width: 100%;
 }
