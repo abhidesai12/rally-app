@@ -3,14 +3,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const authRoutes = require('./api/auth');
-const tasksRoutes = require('./api/tasks');
+const tasksRoutes = require('./api/tasks'); // Adjust the path as necessary
 const path = require('path');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://adesai10:Goob009%21@rallycluster.vci6vet.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const mongoUri = process.env.MONGODB_URI || 'your-mongo-db-uri';
 mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log('MongoDB connection error:', err));

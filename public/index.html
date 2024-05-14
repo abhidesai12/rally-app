@@ -7,59 +7,60 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Sign Up Page -->
-    <div id="signup-page">
-        <h1>rally</h1>
-        <form id="signup-form">
-            <input type="text" placeholder="Full Name" required>
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
-            <button type="submit">Sign Up</button>
-        </form>
-        <p>Already have an account? <a href="#" onclick="showLoginPage()">Log In</a></p>
-    </div>
-
-    <!-- Log In Page -->
-    <div id="login-page" style="display:none;">
-        <h1>rally</h1>
-        <form id="login-form">
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
-            <button type="submit">Log In</button>
-        </form>
-        <p>Don't have an account? <a href="#" onclick="showSignupPage()">Sign Up</a></p>
-    </div>
-
-    <!-- My Moments Page -->
-    <div id="mymoments-page" style="display:none;">
-        <h1>rally</h1>
-        <form id="create-moment-form">
-            <input type="text" placeholder="Moment" required>
-            <input type="datetime-local" placeholder="When" required>
-            <input type="text" placeholder="Where" required>
-            <button type="submit">Create Moment</button>
-        </form>
-        <div id="my-moments">
-            <h2>My Moments</h2>
-            <!-- Moments will be displayed here -->
+    <div class="container">
+        <!-- Sign Up Page -->
+        <div id="signup-page">
+            <h1>rally</h1>
+            <form id="signup-form">
+                <input type="text" placeholder="Full Name" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Sign Up</button>
+            </form>
+            <p>Already have an account? <a href="#" onclick="showLoginPage()">Log In</a></p>
         </div>
-        <button class="red-button" onclick="showOurMomentsPage()">View Friends' Moments</button>
-    </div>
 
-    <!-- Our Moments Page -->
-    <div id="ourmoments-page" style="display:none;">
-        <h1>rally</h1>
-        <div id="friends-today">
-            <h2>Today's Moments</h2>
-            <!-- Today's moments will be displayed here -->
+        <!-- Log In Page -->
+        <div id="login-page" style="display:none;">
+            <h1>rally</h1>
+            <form id="login-form">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Log In</button>
+            </form>
+            <p>Don't have an account? <a href="#" onclick="showSignupPage()">Sign Up</a></p>
         </div>
-        <div id="friends-future">
-            <h2>Future Moments</h2>
-            <!-- Future moments will be displayed here -->
-        </div>
-        <button class="red-button" onclick="showMyMomentsPage()">Back to My Moments</button>
-    </div>
 
+        <!-- My Moments Page -->
+        <div id="mymoments-page" style="display:none;">
+            <h1>rally</h1>
+            <form id="create-moment-form">
+                <input type="text" placeholder="Moment" required>
+                <input type="datetime-local" placeholder="When" required>
+                <input type="text" placeholder="Where" required>
+                <button type="submit">Create Moment</button>
+            </form>
+            <div id="my-moments">
+                <h2>My Moments</h2>
+                <!-- Moments will be displayed here -->
+            </div>
+            <button class="black-button" onclick="showOurMomentsPage()">View Friends' Moments</button>
+        </div>
+
+        <!-- Our Moments Page -->
+        <div id="ourmoments-page" style="display:none;">
+            <h1>rally</h1>
+            <div id="friends-today">
+                <h2>Today's Moments</h2>
+                <!-- Today's moments will be displayed here -->
+            </div>
+            <div id="friends-future">
+                <h2>Future Moments</h2>
+                <!-- Future moments will be displayed here -->
+            </div>
+            <button class="black-button" onclick="showMyMomentsPage()">Back to My Moments</button>
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>
