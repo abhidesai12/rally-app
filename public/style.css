@@ -17,6 +17,13 @@ body {
     align-items: center;
 }
 
+.logo {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
 h1, h2 {
     color: black;
 }
@@ -50,14 +57,14 @@ button:hover {
 }
 
 .red-button {
-    background-color: red;
+    background-color: black;
     color: white;
     border: none;
     cursor: pointer;
 }
 
 .red-button:hover {
-    background-color: darkred;
+    background-color: darkgray;
 }
 
 #my-moments, #friends-today, #friends-future {
