@@ -91,3 +91,11 @@ app.post('/api/tasks/send-invites', (req, res) => {
         });
     });
 });
+
+// Define a custom route to delete overdue moments
+app.delete('/api/tasks/overdue', (req, res) => {
+    const now = new Date();
+    Task.deleteMany({ when: { $lt: now } })
+        .then(result => res.send(`Deleted ${result.deletedCount} overdue moments`))
+        .catch(err => res.status(500).send(`Failed to delete overdue moments: ${err.message}`));
+});
