@@ -155,13 +155,14 @@ function showMyMomentsPage() {
     document.getElementById('ourmoments-page').style.display = 'none';
 
     const userEmail = localStorage.getItem('userEmail');
+    const now = new Date();
 
     fetch('/api/tasks')
         .then(response => response.json())
         .then(tasks => {
             const myMoments = document.getElementById('my-moments');
             myMoments.innerHTML = '<h2>My Moments</h2>';
-            tasks.filter(task => task.user.email === userEmail).forEach(task => {
+            tasks.filter(task => task.user.email === userEmail && new Date(task.when) >= now).forEach(task => {
                 const momentItem = document.createElement('div');
                 momentItem.innerHTML = `
                     <strong>${task.task}</strong> - ${formatDate(task.when)} at ${task.where}
@@ -171,7 +172,7 @@ function showMyMomentsPage() {
                 `;
                 myMoments.appendChild(momentItem);
             });
-            tasks.filter(task => task.attendees.includes(userEmail)).forEach(task => {
+            tasks.filter(task => task.attendees.includes(userEmail) && new Date(task.when) >= now).forEach(task => {
                 const momentItem = document.createElement('div');
                 momentItem.innerHTML = `
                     <strong>${task.task}</strong> - ${formatDate(task.when)} at ${task.where}
@@ -180,6 +181,7 @@ function showMyMomentsPage() {
             });
         });
 }
+
 
 // Show Our Moments Page
 function showOurMomentsPage() {
