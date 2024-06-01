@@ -198,6 +198,8 @@ function showOurMomentsPage() {
             friendsToday.innerHTML = '<h2>Today\'s Moments</h2>';
             friendsFuture.innerHTML = '<h2>Future Moments</h2>';
 
+            const reportFormUrl = "https://forms.gle/ojiRAWBwPaZxWVTk7";
+
             tasks.filter(task => new Date(task.when).toDateString() === now.toDateString()).forEach(task => {
                 const momentItem = document.createElement('div');
                 momentItem.innerHTML = `
@@ -208,6 +210,8 @@ function showOurMomentsPage() {
                     Attended by: ${task.attendees.join(', ')}
                     <br />
                     ${!task.attendees.includes(localStorage.getItem('userEmail')) ? `<button class="red-button" onclick="handleRSVP(event, '${task._id}')">RSVP</button>` : ''}
+                    <br />
+                    <a href="${reportFormUrl}" target="_blank" class="report-link">Report</a>
                 `;
                 friendsToday.appendChild(momentItem);
             });
@@ -222,11 +226,14 @@ function showOurMomentsPage() {
                     Attended by: ${task.attendees.join(', ')}
                     <br />
                     ${!task.attendees.includes(localStorage.getItem('userEmail')) ? `<button class="red-button" onclick="handleRSVP(event, '${task._id}')">RSVP</button>` : ''}
+                    <br />
+                    <a href="${reportFormUrl}" target="_blank" class="report-link">Report</a>
                 `;
                 friendsFuture.appendChild(momentItem);
             });
         });
 }
+
 
 // Delete overdue moments
 function deleteOverdueMoments() {

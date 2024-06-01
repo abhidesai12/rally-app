@@ -91,3 +91,16 @@ button:hover {
     width: 80%;
     margin: 10px 0;
 }
+
+.report-link {
+    color: red;
+    text-decoration: none;
+    margin-top: 1px;
+    margin-bottom: 10px;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.report-link:hover {
+    text-decoration: underline;
+}
